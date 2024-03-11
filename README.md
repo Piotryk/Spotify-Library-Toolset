@@ -6,7 +6,7 @@ Features:
 * Searching for cross-playlist duplicates,
 * Merging playlists,
 * Batch downloading song lyrics,
-* Making useless stats for a playlist like:\
+* Making useless stats for a playlist:\
 	Number of songs   / first letter of title\
 	Number of songs   / release year\
 	Number of songs   / song duration\
