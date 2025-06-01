@@ -1,142 +1,204 @@
 import operator
 from src import shared_funcions
 
-
-def find_duplicaded_songs(spotify, sources):
+#TODO make better logs for copy poaste to exceptions
+def find_duplicaded_songs(spotify_data, tags=None, use_exceptions=True):
     """
     Finds songs that are on more than one playlist.
     Found cases are saved to a file.
 
     :param spotify:     spotipy object
-    :param sources:     list of files with playlist ids
+    :param tags:        list of tags. Only playlists with provided tags will be checked
+    :param use_exceptios:      
     :return: None
     """
     logs_file_name = 'logs/duplicated_songs.log'
-    with open(logs_file_name, "w") as f:
-        f.write('')
-
-    #song_ids = []
-    songs = []
+    songs = {}
     counter_duplicates = 0
-    counter_similar_names = 0
 
+    exceptions = {}
     exceptions = shared_funcions.read_exceptions_with_playlist('exceptions/multi_source_songs.txt')  # Getting ids of allowed songs
-    playlist_ids = shared_funcions.read_sources(sources)  # Getting ids of playlists from sources
 
-    for i, playlist_id in enumerate(playlist_ids):
-        print(f'\rDuplicated songs check: Checking playlist: {i+1} / {len(playlist_ids)}', end='')
-
-        track_list, playlist_name = shared_funcions.get_track_list(spotify, playlist_id)  # Get all tracks from playlist
-
-        for track in track_list:
-            if track['track']['is_local']:
+    for i, playlist in enumerate(spotify_data):
+        playlist_tags = shared_funcions.get_tags_from_playlist(playlist)
+        if tags:
+            tag_in_desc = any([tag in playlist_tags for tag in tags])
+            if not tag_in_desc:     # If there is no tag skip playlist
                 continue
 
+        for track in playlist['tracks']:
+            if track['track'] is None:
+                print(track)
+                continue
+            
             track_id = track['track']['id']
             track_name = track['track']['name']
-            artist_id = track['track']['artists'][0]['id']
             artist_name = track['track']['artists'][0]['name']
 
-            if (track['track']['id'], playlist_id) in exceptions:
-                songs.append({'name': track_name, 'id': track_id, 'artist': artist_id, 'artist_name': artist_name, 'playlist': playlist_name, 'playlist_id': playlist_id})
-                # ^ It has to be here. It causes double entries in exeptions sometimes, I'm not sure if it will work in all cases without that
+            if use_exceptions and (playlist['id'], track_id) in exceptions:
                 continue
 
-            #ids = [song['id'] for song in songs]
-            for song in songs:  # It can be done better
-                if track_id == song['id']:
-                    with open(logs_file_name, "a", encoding='utf-8') as f:
-                        f.write(f'{track_id} {playlist_id} : {artist_name} - {track_name} from {playlist_name}\n')
-                        f.write(f'found in {song["playlist"]} {song["playlist_id"]}\n')
-                    counter_duplicates += 1
-                    break
-                if (track_name in song['name'] or song['name'] in track_name) and artist_id == song['artist']:
-                    with open(logs_file_name, "a", encoding='utf-8') as f:
-                        f.write(f'{track_id} {playlist_id} : {artist_name} - {track_name} from {playlist_name}\n')
-                        f.write(f'song with similar name: {song["name"]} in {song["playlist"]} {song["id"]} {song["playlist_id"]}\n')
-                    counter_similar_names += 1
-                    break
 
-            songs.append({'name': track_name, 'id': track_id, 'artist': artist_id, 'artist_name': artist_name, 'playlist': playlist_name, 'playlist_id': playlist_id})
+            name_len = 45
+            track_name = f'{artist_name} - {track_name}' + ' ' * name_len
+            track_name = track_name[:name_len]
+            name_len = 22
+            playlist_name = f"{playlist['name']}" + ' ' * name_len
+            playlist_name = playlist_name[:name_len]
+            if track['track']['is_local']:
+                track_id = track_name + ' ' * 22
+                track_id = track_name[:22]
 
-    print('', end='\n')
-    if counter_duplicates or counter_similar_names:
-        print(f'Duplicated songs check: Obvious duplicates found: {counter_duplicates}')
-        print(f'Duplicated songs check: Possible duplicates found: {counter_similar_names}')
+            if track_id in songs:
+                songs[track_id]['playlists'][playlist['id']] = playlist_name
+            else:
+                name_len = 20   
+                songs[track_id] = {}
+                songs[track_id]['playlists'] = {playlist['id']: playlist_name}
+                songs[track_id]['id'] = track_id
+                songs[track_id]['name'] = track_name
+                
+    with open(logs_file_name, "w", encoding='utf-8') as log_file:
+        log_file.write('')                    
+        for song in songs:
+            if len(songs[song]['playlists']) > 1:
+                counter_duplicates = counter_duplicates + 1
+                log_file.write(f"{songs[song]['id']}\t{songs[song]['name']}\ton playlists: {songs[song]['playlists']}\n")
+
+    if counter_duplicates:
+        print(f'Duplicate song finder: Number of duplicated songs found: {counter_duplicates}')
     else:
-        print(f'Duplicated songs check: passed. No duplicates found.')
+        print(f'Duplicate song finder: Success. No duplicated songs found.')
+
+    return counter_duplicates
 
 
-def find_duplicated_artists(spotify, sources):
+#TODO: Make excemptions based on specific songs not artists.
+def find_duplicated_artists(spotify_data, tags=None, use_exceptions=True):
     """
-    Finds artists that are on more than one playlists
-    Exceptions are based on specific songs
+    Finds songs that are on more than one playlist.
+    Found cases are saved to a file.
 
     :param spotify:     spotipy object
-    :param sources:     list of files with playlist ids
+    :param tags:        list of tags. Only playlists with provided tags will be checked
+    :param use_exceptios:      
     :return: None
     """
     logs_file_name = 'logs/duplicated_artists.log'
-    with open(logs_file_name, "w") as f:
-        f.write('')
-
-    artists = []
-    artist_ids = []
+    artists = {}
     counter_duplicates = 0
-    exceptions = shared_funcions.read_exceptions_with_playlist('exceptions/multi_source_artists.txt')  # Getting ids of allowed songs
-    playlist_ids = shared_funcions.read_sources(sources)  # Getting ids of playlists from sources
 
-    # Get data for all playlists without checking for duplicates yet
-    for i, playlist_id in enumerate(playlist_ids):
-        print(f'\rDuplicated artists check: Checking playlist: {i + 1} / {len(playlist_ids)}', end='')
-        track_list, playlist_name = shared_funcions.get_track_list(spotify, playlist_id)  # Get all tracks from playlist
+    exceptions = {}
+    exceptions = shared_funcions.read_exceptions_with_playlist('exceptions/multi_source_artists.txt')  # Getting ids of allowed artists
+    for i, playlist in enumerate(spotify_data):
+        playlist_tags = shared_funcions.get_tags_from_playlist(playlist)
+        if tags:
+            tag_in_desc = any([tag in playlist_tags for tag in tags])
+            if not tag_in_desc:   
+                continue
 
-        for track in track_list:
+        for track in playlist['tracks']:
+
             track_id = track['track']['id']
             track_name = track['track']['name']
             artist_id = track['track']['artists'][0]['id']
             artist_name = track['track']['artists'][0]['name']
 
+            if use_exceptions and (playlist['id'], artist_id) in exceptions:     # exceptions for artists are per artists :/ 
+                continue
+
+            name_len = 45
+            track_name = f'{artist_name} - {track_name}' + ' ' * name_len
+            track_name = track_name[:name_len]
+            name_len = 22
+            playlist_name = f"{playlist['name']}" + ' ' * name_len
+            playlist_name = playlist_name[:name_len]
+            name_len = 22
+            artist_name = artist_name + ' ' * name_len
+            artist_name = artist_name[:name_len]
             if track['track']['is_local']:
-                continue
+                artist_id = track_name + ' ' * 22
+                artist_id = track_name[:22]
 
-            if (track['track']['id'], playlist_id) in exceptions:
-                continue
-
-            if artist_id in artist_ids:
-                i = artist_ids.index(artist_id)
-                if playlist_id not in artists[i]['playlist_ids']:
-                    counter_duplicates += 1
-                    artists[i]['song_names'].append(track_name)
-                    artists[i]['song_ids'].append(track_id)
-                    artists[i]['playlist_ids'].append(playlist_id)
-                    artists[i]['playlist_names'].append(playlist_name)
-                    with open(logs_file_name, 'a', encoding='utf-8') as f:
-                        f.write(f'{track_id} {playlist_id} : {artist_name} - {track_name} from {playlist_name} is potential exception. ')
-                        f.write(f'{artist_name} populate: {artists[i]["playlist_names"]}\n')
+            if artist_id in artists:
+                artists[artist_id]['playlists'][playlist['id']] = playlist_name
             else:
-                artist_ids.append(artist_id)
-                artists.append({'id': artist_id,
-                                'name': artist_name,
-                                'playlist_ids': [playlist_id],
-                                'playlist_names': [playlist_name],
-                                'song_names': [track_name],
-                                'song_ids': [track_id],
-                                })
-    print('', end='\n')
-
-    # Check for duplicates
-    artists.sort(key=operator.itemgetter('name'))
-    with open(logs_file_name, 'a', encoding='utf-8') as f:
-        if counter_duplicates:
-            f.write('\n\n\n\n\n')
+                name_len = 20   
+                artists[artist_id] = {}
+                artists[artist_id]['playlists'] = {playlist['id']: playlist_name}
+                #artists[artist_id]['playlists'][playlist['id']] = {playlist['id']: playlist_name}
+                #artists[artist_id]['playlists']['list'] = {playlist['id']: playlist_name}
+                artists[artist_id]['id'] = artist_id
+                artists[artist_id]['name'] = artist_name
+                
+    with open(logs_file_name, "w", encoding='utf-8') as log_file:
+        log_file.write('')                    
         for artist in artists:
-            if len(artist['playlist_ids']) > 1:
-                f.write(f'{artist["id"]} {artist["name"]} found on {len(artist["playlist_ids"])} playlists:\n')
-                for name in artist['playlist_names']:
-                    f.write(f'{name}\n')
+            if len(artists[artist]['playlists']) > 1:
+                counter_duplicates = counter_duplicates + 1
+                log_file.write(f"{artists[artist]['id']}\t{artists[artist]['name']}\ton playlists: {artists[artist]['playlists']}\n")
 
     if counter_duplicates:
-        print(f'Duplicated artists check: Found {counter_duplicates} artists on two or more playlists')
+        print(f'Duplicate artist finder: Number of duplicated artist found: {counter_duplicates}')
     else:
-        print(f'Duplicated artists check: passed. No duplicates found.')
+        print(f'Duplicate artist finder: Success. No duplicated artists found.')
+
+    return counter_duplicates
+    
+
+def check_for_similar_names(spotify_data, tags=None, use_exceptions=True):
+    """
+    Finds songs with simialr names.
+    Mainly searching for:
+    Blah - remastered / (cover) / - 20xx version etc.
+
+    :param spotify:     spotipy object
+    :param tags:        list of tags. Only playlists with provided tags will be checked
+    :param use_exceptios:      
+    :return: None
+    """
+
+    tracks = []
+    counter_similar = 0
+    logs_file_name = 'logs/duplicates_by_name.log'
+    
+    exceptions = {}
+    exceptions = shared_funcions.read_exceptions_with_playlist('exceptions/duplicates_by_name.txt')  # 
+
+    for i, playlist in enumerate(spotify_data):
+        playlist_tags = shared_funcions.get_tags_from_playlist(playlist)
+        tag_in_desc = any([tag in playlist_tags for tag in tags])
+        if not tag_in_desc:     # If there is no tag in desc skip playlist
+            continue
+
+        for track in playlist['tracks']:
+            #\if track['track'] is None:
+            #    continue
+            if track['track']['is_local']:
+                track['track']['id'] = track['track']['name'].split()[0]
+            track['playlist'] = playlist['name']
+            tracks.append(track)
+    # D:
+    with open(logs_file_name, "w", encoding='utf-8') as log_file:
+        log_file.write('')   
+        for track in tracks:
+            for other_track in tracks:
+                if track['track']['id'] == other_track['track']['id']:
+                    continue
+                if use_exceptions and ((track['track']['id'], other_track['track']['id']) in exceptions or (other_track['track']['id'], track['track']['id']) in exceptions):     # exceptions for artists are per artists :/ 
+                    continue
+
+                if track['track']['artists'][0]['name'] == other_track['track']['artists'][0]['name'] and (track['track']['name'] in other_track['track']['name'] or other_track['track']['name'] in track['track']['name']) :
+                    counter_similar = counter_similar + 1
+                    name_len = 45
+                    name = f"{track['track']['artists'][0]['name']} - {track['track']['name']}{' ' * name_len}"[:name_len]
+                    other_track_name = f"{other_track['track']['artists'][0]['name']} - {other_track['track']['name']}{' ' * name_len}"[:name_len]
+                    
+                    log_file.write(f"{track['track']['id']} {other_track['track']['id']} - {name}\t/\t{other_track_name} on {track['playlist']} / {other_track['playlist']}\n")
+    
+    if counter_similar:
+        print(f'Duplicate finder: Number of songs with similar names: {counter_similar}')
+    else:
+        print(f'Duplicate finder: Success. No similar names found.')
+
+    return counter_similar

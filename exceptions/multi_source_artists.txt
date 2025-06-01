@@ -1,25 +1,34 @@
-4d4AIYFkR8MSWtKBmphyir 0V6EabUkAlPY7WmRe7cHD5 : Rise Against - Give It All from NFS soundtrack
-0GBiT1wHV68bU0Cv8ZU2HZ 0V6EabUkAlPY7WmRe7cHD5 : Mudvayne - Determined from NFS soundtrack
-39ZiU2QVBvDQzeepJjg8tp 0V6EabUkAlPY7WmRe7cHD5 : Avenged Sevenfold - Blinded in Chains from NFS soundtrack
-5anCkDvJ17aznvK5TED5uo 0V6EabUkAlPY7WmRe7cHD5 : Avenged Sevenfold - Hail to the King from NFS soundtrack
-1z3LsJRCvln5qO5TOLduQM 0V6EabUkAlPY7WmRe7cHD5 : Bullet For My Valentine - Hand Of Blood from NFS soundtrack
-0jY829pCMnstlNtaE72vSB 0V6EabUkAlPY7WmRe7cHD5 : Disturbed - Decadence from NFS soundtrack
-3bmdzcKPdbP32AUUF9hQUP 0V6EabUkAlPY7WmRe7cHD5 : Killing Joke - Eighties from NFS soundtrack
-2JUo8iX8FC05xd9GEpw9BI 0V6EabUkAlPY7WmRe7cHD5 : Killing Joke - The Death & Resurrection Show from NFS soundtrack
-
-2IZZqH4K02UIYg5EohpNHF 1CPCV4DhLsyFsv6MU1mQXM : The Cranberries - Zombie, bo niear i niear gamma
-1jDJFeK9x3OZboIAHsY9k2 1CPCV4DhLsyFsv6MU1mQXM : Elton John - I'm Still Standing from Nie AR gamma, bo niear i niear gamma
-7L2eFj0KFJDmHTPMUL4ZxR 1CPCV4DhLsyFsv6MU1mQXM : Bonnie Tyler - Holding Out for a Hero - From "Footloose" Soundtrack, bo niear i niear gamma
-5prTs2HAw2G4idHZyeFp8o 1CPCV4DhLsyFsv6MU1mQXM : Bonnie Tyler - Total Eclipse of the Heart from Nie AR gamma
-31AOj9sFz2gM0O3hMARRBx 1CPCV4DhLsyFsv6MU1mQXM : R.E.M. - Losing My Religion, bo niear i niear gamma
-63T7DJ1AFDD6Bn8VzG6JE8 1CPCV4DhLsyFsv6MU1mQXM : The Rolling Stones - Paint It, Black, bo niear i niear gamma
-18AXbzPzBS8Y3AkgSxzJPb 1CPCV4DhLsyFsv6MU1mQXM : Phil Collins - In The Air Tonight - 2015 Remastered, bo niear i niear gamma
-
-4WpmwEdc4RBos8W8icSSxW 3wtt2zgrBTOO9iRlWYwvFn : Mike Oldfield - Moonlight Shadow from Nie AR, bo też AR
-7pPB9erSr5D2KcOxOZzoD6 3wtt2zgrBTOO9iRlWYwvFn : The Red Army Choir - Катюша from Nie AR, bo zje
-4bqEnLbbYi8bsMtn7qsm4h 7lkL0wHWwIOzt0lvtVUYF3 : Peter Gundry - Malleus Maleficarum from Specyficzne -B, bo gamma bo folkvangr
-3axBlc5ZziFkq8jrN3cuWx 3R0V8YOD1GJ4rY9RZYB4iD : Faun - Gwydion from Eluveitie, bo specyficzny Federkleid
-
-11IXRdEjiH0KL8nh4G1j7d 54HHVAXAn6r1Xh37982vbP : Hans Zimmer - Now We Are Free from Filmowe
-6ZFbXIJkuI1dVNWvzJzown 54HHVAXAn6r1Xh37982vbP : Hans Zimmer - Time from Filmowe
-4cZZquNjdJcmIisiQuZivn 54HHVAXAn6r1Xh37982vbP : Marcin Przybyłowicz - Wilcza zamieć
+0V6EabUkAlPY7WmRe7cHD5 2Pfv2w8a20xzC7Dr7QXRqM 	Bullet For My Valentine - Hand Of Blood 		bo NFS
+0V6EabUkAlPY7WmRe7cHD5 0nmQIMXWTXfhgOBdNzhGOs	Avenged 				NFS
+0V6EabUkAlPY7WmRe7cHD5 0Zy4ncr8h1jd7Nzr9946fD	Killing Joke      		NFS
+0V6EabUkAlPY7WmRe7cHD5 7iWiAD5LLKyiox2grgfmUT	Bullet For My Valentin	NFS
+0V6EabUkAlPY7WmRe7cHD5 3TOqt5oJwL9BE2NG9MEwDa	Disturbed             	NFS
+0V6EabUkAlPY7WmRe7cHD5 6Wr3hh341P84m3EI8qdn9O	Rise Against          	NFS
+54HHVAXAn6r1Xh37982vbP 6eUKZXaKkcviH0Ku9w2n3V	Ed Sheeran           	Filmowe 	
+54HHVAXAn6r1Xh37982vbP 0YC192cP3KPCRWx8zr8MfZ	Hans Zimmer           	Filmowe
+54HHVAXAn6r1Xh37982vbP 07vycW8ICLf5hKb22PFWXw	Marcin Przybyłowicz   	Filmowe
+3R0V8YOD1GJ4rY9RZYB4iD 2wPOgnQ6eW3X73uIJZ4YFE	Faun                  	on playlists: {'3R0V8YOD1GJ4rY9RZYB4iD': 'Eluveitie             ', '7lkL0wHWwIOzt0lvtVUYF3': 'Specyficzne -B        '}
+4JbHugn35G7AGXxes0Oftt 4yNluGAiPbYXLwlA9KspbG	The Red Army Choir    	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '4JbHugn35G7AGXxes0Oftt': 'Zjebane src           '}
+0g6fQStwwSSxScrgrsvIF8 6vytZ677lz4LzCrUDcDokM	Blu Cantrell          	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 7kzqfJaU9Ci3UaIQvWtwPm	Kalwi & Remi          	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 6XpaIBNiVzIetEPCWDvAFP	Whitney Houston       	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 2gBjLmx6zQnFGQJCAQpRgw	Nelly                 	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 1KCSPY1glIKqW2TotWuXOR	P!nk                  	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 47BNWfpngeFHYvBlPPyraM	Kate Ryan             	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 2siHvYaxjaW5rKVRiIrMYH	Anastacia             	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 4VH2QabEORUUhN1F1cYQ6N	Reamonn               	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 5pKCCKE2ajJHZ9KAiaK11H	Rihanna               	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 7slfeZO9LsJbWgpkIoXBUJ	Ricky Martin          	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 53XhwfbYqKCa1cC15pYq2q	Imagine Dragons       	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 0EmeFodog0BfCgMzAIvKQp	Shakira               	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 6tbjWDEIzxoDsBA1FuhfPW	Madonna               	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 5EvFsr3kj42KNv97ZEnqij	Shaggy                	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+0g6fQStwwSSxScrgrsvIF8 46lnlnlU0dXTDpoAUmH6Qx	Lou Bega              	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '0g6fQStwwSSxScrgrsvIF8': 'Nie AR scalona        '}
+1CPCV4DhLsyFsv6MU1mQXM 7t0rwkOPGlDPEhaOcVtOt9	The Cranberries       	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '1CPCV4DhLsyFsv6MU1mQXM': 'Nie AR gamma          '}
+1CPCV4DhLsyFsv6MU1mQXM 0SD4eZCN4Kr0wQk56hCdh2	Bonnie Tyler          	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '1CPCV4DhLsyFsv6MU1mQXM': 'Nie AR gamma          '}
+1CPCV4DhLsyFsv6MU1mQXM 4KWTAlx2RvbpseOGMEmROg	R.E.M.                	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '1CPCV4DhLsyFsv6MU1mQXM': 'Nie AR gamma          '}
+1CPCV4DhLsyFsv6MU1mQXM 22bE4uQ6baNwSHPVcDxLCe	The Rolling Stones    	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '1CPCV4DhLsyFsv6MU1mQXM': 'Nie AR gamma          '}
+1CPCV4DhLsyFsv6MU1mQXM 4lxfqrEsLX6N1N4OCSkILp	Phil Collins          	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '1CPCV4DhLsyFsv6MU1mQXM': 'Nie AR gamma          '}
+1CPCV4DhLsyFsv6MU1mQXM 3PhoLpVuITZKcymswpck5b	Elton John            	on playlists: {'3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                ', '1CPCV4DhLsyFsv6MU1mQXM': 'Nie AR gamma          '}
+1CPCV4DhLsyFsv6MU1mQXM 0HCkZtmMJLvUyWT5m0ojBX	Peter Gundry          	on playlists: {'7lkL0wHWwIOzt0lvtVUYF3': 'Specyficzne -B 		', '1CPCV4DhLsyFsv6MU1mQXM': 'Nie AR gamma          '}
+3wtt2zgrBTOO9iRlWYwvFn 562Od3CffWedyz2BbeYWVn	Mike Oldfield         	on playlists: {'7rcyD4pGmhjYVMrUn8SGqk': 'Rock                  ', '3wtt2zgrBTOO9iRlWYwvFn': 'Nie AR                '}

@@ -1,22 +1,26 @@
-import sys
+import sys, pickle
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from config import SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_CLIENT_URL, SCOPE_MASTER
 
-from src import current_playlists
+from src import tags
 from src import single_finder
 from src import duplicates_finder
 from src import merge
-from src import stats
-from src import stats_monthly_listeners
-from src import utilities
 from src import lyrics
-
 """
-Only Merge and Uutilities edit spotify library.
+Features modifying Spotify:
+
+
 Other features save results to .log files, so all found cases(single, duplicate etc.) needs to be removed manually.
 
-TODO:
+Removed: 
+Get_genres_for_playlist
+ARTIST EXPLORER - Spotify depreaceted API for that. TODO: Move to last.fm API
+
+TODO Duplicate songs make better legs for copy poaste to exceptions
+TODO: Duplicate artists Make excemptions based on specific songs not artists.
+
     Check_id currently can check only ids from my spotify. Find better way to check any playlist id
     Fill parameters in function comments
     Exceptions have hardcoded file names. Move filenames to variables in case of update
@@ -29,109 +33,116 @@ TODO:
 """
 
 
-if __name__ == '__main__':
-    '''
-    IDs of playlists I want to process
-    '''
-    # My playlists ids
-    wszystko_id = '5ILM7FGO30AanFwmfuLXVB'
-    allar_id = '6UTHiiydwvjK1NZ7mZ7u7O'
-    #allpol_id = '5GJ9VxkT1qqB53inWdOXL8'   # Removed from spotify
-    top_id = '0AwOdQZaWhm5uXrE507LHg'
-    pl_klasyki_id = '7MWE8HgYpzcyLPrXYvKrF2'
+def standard_workflow(spotify):
+    pass
+    #TODO:
+    #Make data
+    #Check tags
+    #Find singles
+    #Find duplicates on sources artists
+    #Find duplicates on sources songs
+    #Check merged
 
-    top_toczek_id = '4Q5z9tpuyoIlXvNeSkV3A3'
-    rzeczy_toczek_id = '2sSlxwInCbM51QoiVgHWj9'
-    mdm_id = '44TdhggxmyUm95R6ce1LIL'
+    # Merge to Allar
+    # Merge to wszysciutenko
+    # Merge to All met
+    # Merge to Allhamama
 
-    sources = ['playlists/sources_ar.txt', 'playlists/sources_niear.txt', 'playlists/sources_pl.txt']
-    merged = ['playlists/merged.txt']
-    all_source_files = ['playlists/merged.txt', 'playlists/skip.txt'] + sources
-    all_playlists_file = 'playlists/all_playlists.txt'
-    #playlists = [top_id, wszystko_id, allar_id, pl_klasyki_id, top_toczek_id, rzeczy_toczek_id, mdm_id]
-    playlists = [top_id, wszystko_id, allar_id, pl_klasyki_id]
-    check = True
+    # Renew local data
+    # Check merged
+    # Get lyrics
+    # Make stats
 
-    spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID,
-                                                        client_secret=SPOTIPY_CLIENT_SECRET,
-                                                        redirect_uri=SPOTIPY_CLIENT_URL,
-                                                        scope=SCOPE_MASTER))
 
-    lyrics.get_lyrics_from_sources(spotify, sources, check_existing_file=True, preserve_logs=False)
-
-    '''
-    Check if ids declared above are still valid. Commented out due to aggresive behaviour
-    '''
-    #utilities.check_ids(playlists)
-
-    '''
-    Get all user's playlists to all_playlists.txt
-    '''
-    current_playlists.get_playlists(spotify, all_playlists_file)
-
-    '''
-    Check if all spotify playlists are in sources
-    And if all playlists in sources are still in spotify library
+def test_workflow(spotify, merge_flag=False, renew_data=False):
+    tag_data = tags.tag_data
     
-    Second check if all specific ids above still exist on Spotify
-    NOTE: 
-    '''
-    if not current_playlists.sanity_check(all_source_files, all_playlists_file):
-        sys.exit(-2)
+    data_filename = 'data/spotify_data.pkl'
 
-    if not current_playlists.check_ids(playlists, all_playlists_file):
-        sys.exit(-3)
 
     '''
-    Find songs from single release or EP, but they shoud be removed or marked as allowed manually
+    Get all user's playlists to spotify_data dict
+    '''
+    if renew_data:
+        spotify_data = tags.get_playlist_data(spotify)
+        with open(data_filename, 'wb') as f:
+            pickle.dump(spotify_data, f)
+    else:
+        with open(data_filename, 'rb') as f:
+            spotify_data = pickle.load(f)
+    #print(f'Number of playlists on Spotify: {len(spotify_data)}')
+
+
+    '''
+    Check if all playlists have tags
+    '''
+    #   spotify_data[0]['description'] = ''     #Debug check
+    flag_missing_tags = tags.check_if_tags_exist(spotify_data)
+    tags.save_tags_to_logs(spotify_data)
+    if flag_missing_tags:
+        raise Exception("Some playlists are missing Tags. Check logs/tags.log")
+
+    '''
+    Find songs from single release or EP, but they shoud be removed manually or marked as exceptions
     Found singles are listed in log file
     '''
-    sources = ['playlists/sources_ar.txt', 'playlists/sources_niear.txt', 'playlists/sources_pl.txt', 'playlists/skip.txt']
-    single_finder.find_singles(spotify, sources)
+    single_finder.find_singles(spotify_data, ['S'])
+    print('')
 
     ''' 
     Finding songs that occur on two different playlists on sources. There should be no such songs
     Finding artists that populate more than one playlists. Exceptions are based on specific song
     '''
-    sources = ['playlists/sources_ar.txt', 'playlists/sources_niear.txt', 'playlists/sources_pl.txt']
-    duplicates_finder.find_duplicaded_songs(spotify, sources)
-    duplicates_finder.find_duplicated_artists(spotify, sources)
+    #duplicates_finder.find_duplicaded_songs(spotify_data, ['S'], use_exceptions=False)
+    duplicates_finder.find_duplicaded_songs(spotify_data, ['S', 'P'], use_exceptions=True)
+
+    duplicates_finder.find_duplicated_artists(spotify_data, ['S'], use_exceptions=True)
+    #duplicates_finder.find_duplicated_artists(spotify_data, ['S', 'P'], use_exceptions=True)
+
+    #duplicates_finder.check_for_similar_names(spotify_data, ['S'], use_exceptions=True)
+    print('')
 
     '''
     Check if all songs on merged playlists are on sources
     '''
-    sources = ['playlists/sources_ar.txt', 'playlists/sources_niear.txt', 'playlists/sources_pl.txt']
-    merged = ['playlists/merged.txt']
-    merge.check_merged_simple(spotify, merged, sources)
-    merge.check_merged(spotify, merged, sources)
+    merge.check_merged(spotify_data,['M'], ['S'])
+    merge.check_merged(spotify_data,['M'], ['S', 'P'])
+    print('')
 
     '''
-    Add all songs form sources to target playlist.
-    Omit songs that are already on target
+    Merge all songs from playlists 
     '''
-    sources = ['playlists/sources_ar.txt', 'playlists/sources_niear.txt', 'playlists/sources_pl.txt']
-    merge.merge(spotify, ['playlists/sources_ar.txt'], allar_id, add_in_doubt=False)
-    #merge.merge(spotify, ['playlists/sources_pl.txt'], allpol_id)
-    merge.merge(spotify, sources, wszystko_id)
-    merge.check_merged(spotify, merged, sources)
+    pl_allar_id = '6UTHiiydwvjK1NZ7mZ7u7O'
+    pl_wszysciutenko_id = '5ILM7FGO30AanFwmfuLXVB'
+    pl_allamham_id = '5OTAUUzEG5B9iMAsLD6W4X'
+    pl_allmet_id = '0r7wjUxEpKznRpsLLonaKo'
+    pl_pojebance_id = '2TBgpwmYJjJw905nI7coWP'
+    merge.merge(spotify, spotify_data, pl_allar_id, tags=['S'], exclude_tags=['nieAR', 'PL', 'D', 'BUG'], add_in_doubt=True)
+    merge.merge(spotify, spotify_data, pl_allamham_id, tags=['MD'], exclude_tags=['nieAR', 'PL', 'D', 'BUG'], add_in_doubt=False)
+    merge.merge(spotify, spotify_data, pl_allmet_id, tags=['MD', 'VH'], exclude_tags=['nieAR', 'PL', 'D', 'BUG'], add_in_doubt=False)
+    merge.merge(spotify, spotify_data, pl_pojebance_id, tags=['D'], exclude_tags=[], add_in_doubt=False)
+    merge.merge(spotify, spotify_data, pl_wszysciutenko_id, tags=['S'], exclude_tags=[], add_in_doubt=True)
 
     '''
-    Get lyrics from all songs and save them in one file (data/lyrics.txt)
-    Unfortunately looking for PL / RUS / specyficzne is pointless.
+    Download lyrics for all songs on all playlists with 'S' tag
     '''
-    sources = ['playlists/sources_ar.txt', 'playlists/sources_niear.txt', 'playlists/sources_pl.txt']
-    #lyrics.get_lyrics_from_playlist(spotify, wszystko_id, check_existing_file=True, preserve_logs=False)
-    lyrics.get_lyrics_from_sources(spotify, sources, check_existing_file=True, preserve_logs=False)
+    lyrics.get_lyrics(spotify_data, ['S'], check_existing_file=True, preserve_logs=False)
 
-    '''
-    Make some stats for set of playlists
-    '''
-    playlists = [top_id, allar_id, wszystko_id, top_toczek_id, rzeczy_toczek_id]
-    #playlists = [top_id]
-    stats.make_all_stats(spotify, playlists)
 
-    #utilities.get_artists_to_file(spotify, [top_id, allar_id, wszystko_id, top_toczek, rzeczy_toczek, pl_klasyki_id, mdm_id])     # in case I need to renew the monthly listeners data
-    stats_monthly_listeners.make_stats(spotify, playlists)
+if __name__ == '__main__':
+    spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID,
+                                                        client_secret=SPOTIPY_CLIENT_SECRET,
+                                                        redirect_uri=SPOTIPY_CLIENT_URL,
+                                                        scope=SCOPE_MASTER))
 
-    stats.artists_in_first_n_songs_compare(spotify, top_toczek_id, top_id, shuffle=False)
-    stats.artists_in_first_n_songs_compare(spotify, rzeczy_toczek_id, allar_id, shuffle=True, fit=True)
+    test_workflow(spotify, merge_flag=False, renew_data=False)
+
+    #ids = ['34BYnbHXzVOzRsi8blgTYt','44Gv80wmwzVpHGhlXttYLs','5PZ3COei03jgbL9XlQoE4D','70vbbwbAEaWokZlGta6R8g','0EKCC1pitvCPKzhWiXgzRa']
+    #spotify.playlist_remove_all_occurrences_of_items('5ILM7FGO30AanFwmfuLXVB', ids)
+    #standard_workflow(spotify)
+    pl_allar_id = '6UTHiiydwvjK1NZ7mZ7u7O'
+    pl_wszysciutenko_id = '5ILM7FGO30AanFwmfuLXVB'
+
+    #ids = ['0teIUBCvT2g9QLs7Fg3z5H']
+    #spotify.playlist_remove_all_occurrences_of_items(pl_allar_id, ids)
+    #spotify.playlist_remove_all_occurrences_of_items(pl_wszysciutenko_id, ids)

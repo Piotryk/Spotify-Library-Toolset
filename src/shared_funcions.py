@@ -1,29 +1,5 @@
 import os
-
-
-def read_sources(sources):
-    """
-    Reads all listed files and returns list of playlist ids
-    :param sources: List of file paths
-    :return: List of playlist ids
-    """
-    playlist_ids = []
-    for file in sources:
-        if not os.path.isfile(file):
-            continue
-
-        with open(str(file), "r", encoding='utf-8') as f:
-            for line in f:
-                if line == '\n':
-                    continue
-
-                if line[0] == '#':
-                    continue
-
-                line = line.split()
-                playlist_ids.append(line[0])
-
-    return playlist_ids
+import re
 
 
 def read_basic_exceptions(file):
@@ -54,7 +30,7 @@ def read_exceptions_with_playlist(file):
     """
     Getting id of allowed exceptions with id of playlist where exeption is accepted.
     :param file: exception file path
-    :return: List of tuples containing song_id and playlist_id
+    :return: List of tuples containing playlist_id, song_id
     """
     exceptions = []
     if not os.path.isfile(file):
@@ -128,3 +104,10 @@ def get_track_list(spotify, playlist_id):
         track_list.extend(response['items'])
 
     return track_list, playlist_name
+
+
+def get_tags_from_playlist(playlist_data):
+    description = playlist_data['description']
+    tags = re.sub(".*Tags:", '', description)
+    tags = tags.split()
+    return tags
