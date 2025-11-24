@@ -8,6 +8,8 @@ from src import single_finder
 from src import duplicates_finder
 from src import merge
 from src import lyrics
+from src import stats
+from src import specific_workflows
 """
 Features modifying Spotify:
 
@@ -33,7 +35,7 @@ TODO: Duplicate artists Make excemptions based on specific songs not artists.
 """
 
 
-def standard_workflow(spotify):
+def workflow(spotify):
     pass
     #TODO:
     #Make data
@@ -54,11 +56,10 @@ def standard_workflow(spotify):
     # Make stats
 
 
-def test_workflow(spotify, merge_flag=False, renew_data=False):
-    tag_data = tags.tag_data
+def standard_workflow(spotify, merge_flag=False, renew_data=False, renew_lyrics=True):
+    tag_data = tags.tag_data        # ???
     
     data_filename = 'data/spotify_data.pkl'
-
 
     '''
     Get all user's playlists to spotify_data dict
@@ -94,9 +95,9 @@ def test_workflow(spotify, merge_flag=False, renew_data=False):
     Finding artists that populate more than one playlists. Exceptions are based on specific song
     '''
     #duplicates_finder.find_duplicaded_songs(spotify_data, ['S'], use_exceptions=False)
-    duplicates_finder.find_duplicaded_songs(spotify_data, ['S', 'P'], use_exceptions=True)
+    duplicates_finder.find_duplicaded_songs(spotify_data, ['S', 'P'], ['BUG'], use_exceptions=True)
 
-    duplicates_finder.find_duplicated_artists(spotify_data, ['S'], use_exceptions=True)
+    duplicates_finder.find_duplicated_artists(spotify_data, ['S'], ['BUG'], use_exceptions=True)
     #duplicates_finder.find_duplicated_artists(spotify_data, ['S', 'P'], use_exceptions=True)
 
     #duplicates_finder.check_for_similar_names(spotify_data, ['S'], use_exceptions=True)
@@ -105,8 +106,8 @@ def test_workflow(spotify, merge_flag=False, renew_data=False):
     '''
     Check if all songs on merged playlists are on sources
     '''
-    merge.check_merged(spotify_data,['M'], ['S'])
-    merge.check_merged(spotify_data,['M'], ['S', 'P'])
+    merge.check_merged(spotify_data, ['M'], ['S'])
+    merge.check_merged(spotify_data, ['M'], ['S', 'P'])
     print('')
 
     '''
@@ -114,19 +115,34 @@ def test_workflow(spotify, merge_flag=False, renew_data=False):
     '''
     pl_allar_id = '6UTHiiydwvjK1NZ7mZ7u7O'
     pl_wszysciutenko_id = '5ILM7FGO30AanFwmfuLXVB'
+    pl_top_of_the_top_u = '0k5DCITU0LEZZkgul7Ey5M'
+    pl_mieszkan_wspanialy = '0deUpgRxeiONMtk055LcoK'
+    pl_mieszkan_wspanialy_b = '3paHJWCisOUGbIgdBR1jGq'
     pl_allamham_id = '5OTAUUzEG5B9iMAsLD6W4X'
     pl_allmet_id = '0r7wjUxEpKznRpsLLonaKo'
     pl_pojebance_id = '2TBgpwmYJjJw905nI7coWP'
-    merge.merge(spotify, spotify_data, pl_allar_id, tags=['S'], exclude_tags=['nieAR', 'PL', 'D', 'BUG'], add_in_doubt=True)
-    merge.merge(spotify, spotify_data, pl_allamham_id, tags=['MD'], exclude_tags=['nieAR', 'PL', 'D', 'BUG'], add_in_doubt=False)
-    merge.merge(spotify, spotify_data, pl_allmet_id, tags=['MD', 'VH'], exclude_tags=['nieAR', 'PL', 'D', 'BUG'], add_in_doubt=False)
-    merge.merge(spotify, spotify_data, pl_pojebance_id, tags=['D'], exclude_tags=[], add_in_doubt=False)
-    merge.merge(spotify, spotify_data, pl_wszysciutenko_id, tags=['S'], exclude_tags=[], add_in_doubt=True)
+    #merge.merge(spotify, spotify_data, pl_mieszkan_wspolny, tags=['S'], exclude_tags=[], add_in_doubt=False)
+    #return None
+
+    if merge_flag:
+        merge.merge(spotify, spotify_data, pl_allar_id, tags=['S'], exclude_tags=['nieAR', 'PL', 'D', 'BUG'], add_in_doubt=True)
+        merge.merge(spotify, spotify_data, pl_allamham_id, tags=['MD'], exclude_tags=['nieAR', 'PL', 'D', 'BUG'], add_in_doubt=False)
+        merge.merge(spotify, spotify_data, pl_allmet_id, tags=['MD', 'VH'], exclude_tags=['nieAR', 'PL', 'D', 'BUG'], add_in_doubt=False)
+        merge.merge(spotify, spotify_data, pl_pojebance_id, tags=['D'], exclude_tags=[], add_in_doubt=False)
+        merge.merge(spotify, spotify_data, pl_wszysciutenko_id, tags=['S'], exclude_tags=[], add_in_doubt=False)
 
     '''
     Download lyrics for all songs on all playlists with 'S' tag
     '''
-    lyrics.get_lyrics(spotify_data, ['S'], check_existing_file=True, preserve_logs=False)
+    if renew_lyrics:
+        lyrics.get_lyrics(spotify_data, ['S'], check_existing_file=True, preserve_logs=False)
+
+    stats.make_all_stats(spotify_data, pl_top_of_the_top_u)
+    stats.make_all_stats(spotify_data, pl_allar_id)
+    stats.make_all_stats(spotify_data, pl_allmet_id)
+    stats.make_all_stats(spotify_data, pl_wszysciutenko_id)
+    stats.make_all_stats(spotify_data, pl_mieszkan_wspanialy)
+    stats.make_all_stats(spotify_data, pl_mieszkan_wspanialy_b)
 
 
 if __name__ == '__main__':
@@ -135,14 +151,23 @@ if __name__ == '__main__':
                                                         redirect_uri=SPOTIPY_CLIENT_URL,
                                                         scope=SCOPE_MASTER))
 
-    test_workflow(spotify, merge_flag=False, renew_data=False)
+    #test_workflow(spotify, merge_flag=False, renew_data=True)
 
-    #ids = ['34BYnbHXzVOzRsi8blgTYt','44Gv80wmwzVpHGhlXttYLs','5PZ3COei03jgbL9XlQoE4D','70vbbwbAEaWokZlGta6R8g','0EKCC1pitvCPKzhWiXgzRa']
-    #spotify.playlist_remove_all_occurrences_of_items('5ILM7FGO30AanFwmfuLXVB', ids)
-    #standard_workflow(spotify)
-    pl_allar_id = '6UTHiiydwvjK1NZ7mZ7u7O'
-    pl_wszysciutenko_id = '5ILM7FGO30AanFwmfuLXVB'
+    standard_workflow(spotify, merge_flag=False, renew_data=False, renew_lyrics=True)
 
-    #ids = ['0teIUBCvT2g9QLs7Fg3z5H']
-    #spotify.playlist_remove_all_occurrences_of_items(pl_allar_id, ids)
-    #spotify.playlist_remove_all_occurrences_of_items(pl_wszysciutenko_id, ids)
+    #pl_allar_id = '6UTHiiydwvjK1NZ7mZ7u7O'
+    #pl_wszysciutenko_id = '5ILM7FGO30AanFwmfuLXVB'
+    #mieszkan wspanialy = '0deUpgRxeiONMtk055LcoK'
+    #top_of_the_top_u = '0k5DCITU0LEZZkgul7Ey5M'
+    #top_adam = '6MBd4UoRtoeoe8shYu2ioj'
+    #top_pio = '4Q5z9tpuyoIlXvNeSkV3A3'
+
+
+    #specific_workflows.remove_dupes_within_playlists(spotify, '0deUpgRxeiONMtk055LcoK', renew_data=False)
+    #specific_workflows.sync_mieszkan(spotify, renew_data=True, remove_or_log_flag=True)
+    #specific_workflows.print_playlist(spotify, '4x1n7HZJsLfx548o9Ccc3L')
+    #specific_workflows.log_artists_song_no(spotify, '0deUpgRxeiONMtk055LcoK')
+    specific_workflows.random_mieszkan_stats(spotify)
+    #stats.make_all_stats(spotify, '0deUpgRxeiONMtk055LcoK0')
+
+1
