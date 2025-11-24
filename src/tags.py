@@ -25,7 +25,6 @@ def get_playlist_data(spotify):
         response = spotify.next(response)
         playlists.extend(response['items'])
 
-    a = 0
     for i, playlist in enumerate(playlists):
         playlist_name = playlist['name']
         playlist_id = playlist['id']
@@ -42,7 +41,7 @@ def check_if_tags_exist(spotify_data):
     """
     Prints out names of playlists with no tags.
 
-    :param spotify:
+    :param spotify_data:
     :return:
     """
     logs_file_name = 'logs/tags_missing.log'
@@ -70,21 +69,27 @@ def save_tags_to_logs(spotify_data):
     """
     Prints out names of playlists with no tags.
 
-    :param spotify:
+    :param spotify_data:
     :return:
     """
     logs_file_name = 'logs/tags.log'
+    all_tags = []
 
     with open(logs_file_name, 'w', encoding='utf-8') as f:
         for playlist in spotify_data:
             playlist_name = playlist['name']
             playlist_id = playlist['id']
             playlist_tags = shared_funcions.get_tags_from_playlist(playlist)
+            all_tags.extend(playlist_tags)
             
             name_len = 35
             from_playlist = playlist_name + ' ' * name_len
             from_playlist = from_playlist[:name_len]
             f.write(f'{playlist_id}\t{from_playlist}\tTags:\t{playlist_tags}.\n')
+
+        all_tags = list(set(all_tags))
+        f.write(f'All unique tags:\n{all_tags}\n')
+
 
     print("All playlist tags saved to logs/tags.log.")
 
